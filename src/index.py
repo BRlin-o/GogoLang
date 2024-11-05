@@ -1,10 +1,12 @@
+import os
 from fastapi import FastAPI, Request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from langchain import OpenAI
 from langchain.chains import ConversationChain
-import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # 設置環境變數
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")

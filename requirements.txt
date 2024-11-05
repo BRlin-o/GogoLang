@@ -1,6 +1,8 @@
 line-bot-sdk
 fastapi
+openai
 langchain
 langchain-community
 flask
 uvicorn
+python-dotenv
