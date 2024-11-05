@@ -9,7 +9,7 @@ import os
 # 設置環境變數
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
-GPT_API_KEY = os.getenv("GPT_API_KEY")
+GPT_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # 初始化 FastAPI 應用
 app = FastAPI()
@@ -19,7 +19,7 @@ line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 # 初始化 LangChain Conversation Chain 和 OpenAI GPT-4 mini
-llm = OpenAI(api_key=GPT_API_KEY, model="gpt-4-mini")
+llm = OpenAI(api_key=GPT_API_KEY, model="gpt-4o-mini")
 conversation = ConversationChain(llm=llm)
 
 # 路由設定，接收 LINE Webhook 請求
