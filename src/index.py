@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request, HTTPException
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from GoLang.src.llms.openai import Chat_OpenAI
-from chat_model import ChatModel
+from GoLang.src.llms.llm_openai import Chat_OpenAI
+from GoLang.src.chat_model import ChatModel
 import os
 
 app = FastAPI()

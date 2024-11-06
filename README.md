@@ -3,8 +3,7 @@
 ## Installation
 
 ```bash
-conda create --name GogoLang python=3.11
-conda activate GogoLang
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 

@@ -1,0 +1,350 @@
+p {
+    color: #333;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    background-color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    .logo {
+        width: 75%;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo {
+        width: 100%;
+    }
+}
+
+.title {
+    text-align: center;
+    font-weight: 300;
+}
+
+.st-bb {
+    background-color: white;
+}
+
+nav {
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #333 !important;
+}
+
+.chatMessage {
+    background-color: #ffffff;
+}
+
+.loading-indicator-wrapper {
+    display: flex;
+    justify-content: end;
+}
+
+.loading-indicator {
+    display: inline-block;
+    max-width: 20px;
+    max-height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #333;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.message-text {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+[data-testid="stBottom"] {
+    div {
+        background-color: transparent;
+    }
+}
+
+[data-testid="stChatInput"] {
+    color: #333;
+
+    textarea {
+        color: #333;
+        caret-color: #333; // Set the typing cursor color
+    }
+
+    [data-baseweb="textarea"] {
+        border: 1px solid #7f7f7f;
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s;
+    }
+}
+
+[data-testid="stChatInputSubmitButton"] {
+    background-color: transparent;
+
+    &:hover {
+        background-color: transparent;
+    }
+
+    svg {
+        fill: #333;
+        transition: all 0.2s;
+    }
+
+    &:hover svg {
+        fill: #666;
+    }
+
+}
+
+[data-testid="stBaseButton-headerNoPadding"] {
+    background-color: transparent;
+    color: #333;
+
+    &:hover {
+        background-color: transparent;
+        color: #666;
+    }
+}
+
+[data-testid="stSidebar"] {
+    background-color: transparent;
+    color: #333;
+    border-right: 1px solid #e0e0e0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+[data-testid="stSelectboxVirtualDropdown"] {
+    li {
+        color: #333;
+    }
+
+    [aria-selected="true"] {
+        background-color: #757575;
+        color: white !important;
+    }
+
+    li:active {
+        color: white;
+    }
+
+    li:focus {
+        color: white;
+    }
+
+    li:hover {
+        color: white;
+    }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555 !important;
+}
+
+[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
+
+[data-testid="stMainBlockContainer"] {
+
+    padding: 2rem 1rem 1rem;
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(153, 0, 255, 0.3);
+        min-height: 60vh;
+        animation: glow 5s ease-in-out infinite;
+        backdrop-filter: grayscale(0.5);
+    }
+
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.2);
+        }
+        25% {
+            box-shadow: 0 0 50px rgba(255, 157, 0, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 50px rgba(0, 255, 157, 0.2);
+        }
+        75% {
+            box-shadow: 0 0 50px rgba(0, 157, 255, 0.2);
+        }
+        100% {
+            box-shadow: 0 0 50px rgba(153, 0, 255, 0.2);
+        }
+    }
+}
+
+
+[data-testid="stHeaderActionElements"] {
+    display: none;
+}
+
+[data-testid="stElementContainer"] {
+
+    color: #333 !important;
+    background-color: transparent;
+    display: flex;
+
+    .stAlertContainer {
+        color: #333 !important;
+    }
+
+    h1:first-child {
+        text-align: center;
+    }
+
+    h3:nth-child(0) {
+        text-align: center;
+    }
+
+    h3:nth-child(1) {
+        text-align: center;
+    }
+
+    [data-testid="stBaseButton-secondary"] {
+        min-width: 80px;
+        border: none;
+        background: linear-gradient(90deg, #ff8a00, #e52e71);
+        color: white;
+        transition: all 0.2s;
+
+        &:hover {
+            background: linear-gradient(90deg, #ff8a00, #e52e71);
+            color: white;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.15));
+        }
+    }
+
+    [data-testid="stSelectbox"] {
+        max-width: 300px;
+
+        [data-baseweb="select"] {
+            div {
+            color: #333;
+            }
+
+            svg {
+            fill: #333;
+            }
+
+
+        }
+
+
+    }
+}
+
+
+
+
+.stApp {
+    background:
+        linear-gradient(150deg, #ecedee, transparent 30%),
+        linear-gradient(330deg, rgb(210, 206, 242), transparent 30%),
+        linear-gradient(225deg, #fff0be, #fbdce7, #e2fae1, powderblue);
+}
+
+h3 {
+    color: #333 !important;
+}
+
+.stAppHeader {
+    display: none;
+}
+
+body {
+    background-color: lightgoldenrodyellow;
+}
+
+div[role="listbox"] ul {
+    background-color: red;
+}
+
+.message {
+    background-color: #ffffff;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2em;
+
+    &.user {
+        flex-direction: row-reverse;
+        text-align: right;
+    }
+
+    &.assistant {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 30px;
+        min-height: 30px;
+        max-width: 30px;
+        max-height: 30px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        margin: 0 10px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        display: block !important;
+    }
+}
