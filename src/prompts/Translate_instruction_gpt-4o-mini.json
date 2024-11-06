@@ -1,0 +1,7 @@
+{
+    "model_id": "gpt-4.0-mini",
+    "description": "Translate English to Chinese",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "prompt": "Translate the following English text to Japanese.\n\n\"Hello, how are you?\"\n\n---\n\nChinese:"
+}
