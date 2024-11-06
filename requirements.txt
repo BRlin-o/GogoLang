@@ -1,9 +1,9 @@
-line-bot-sdk
 fastapi
 openai
 flask
 uvicorn
 python-dotenv
+line-bot-sdk==3.10.2
 langchain==0.2.17
 langchain-openai
 langchain-community
