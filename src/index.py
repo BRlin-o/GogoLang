@@ -16,7 +16,7 @@ chat_model = ChatModel(llm=llm)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "I'm healthy :D"}
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
