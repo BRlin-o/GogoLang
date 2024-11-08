@@ -22,8 +22,13 @@ source .venv/bin/activate
 
 ### Install python package
 
+- Core
 ```bash
-source .venv/bin/activate
+git clone https://github.com/BRlin-o/GogoLang-core core
+pip install -r core/requirements.txt
+```
+
+```bash
 pip install -r requirements.txt
 ```
 
