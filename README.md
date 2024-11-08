@@ -8,7 +8,6 @@ python -m venv .venv
 
 - Windows
     ```bash
-    python -m venv .venv
     cd .venv/Scripts
     activate.bat
 
