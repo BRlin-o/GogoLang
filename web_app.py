@@ -6,8 +6,6 @@ from langchain_community.chat_message_histories import StreamlitChatMessageHisto
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 from langchain.prompts import PromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from langchain.chains import ConversationChain
-from typing import List, Tuple, Union, Dict
 from langchain.agents import create_react_agent, AgentExecutor
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,17 +15,7 @@ from src.ui import StreamHandler, display_chat_messages, langchain_messages_form
 
 # llm = Chat_OpenAI()
 from langchain_openai import ChatOpenAI
-import os
-
-def Chat_OpenAI(model_id=os.getenv("OPENAI_MODEL", default="gpt-4o-mini")):
-    # 初始化 OpenAI 聊天模型，從環境變數中讀取 API 金鑰
-    return ChatOpenAI(
-        model=model_id,
-        temperature=0,
-        max_tokens=None,
-        timeout=None,
-        max_retries=2,
-    )
+from core.src.llms.llm_openai import Chat_OpenAI
 
 llm = Chat_OpenAI()
 
