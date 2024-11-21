@@ -84,16 +84,21 @@ It's OK for this section to be quite long.
 
 Output Format:
 If you need to use a tool, use this format:
-Thought: [Your thought process]
+```
+Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
 Action Input: [input for the tool, including Gogoro {scooter_name} if relevant]
 End of response.
+```
 
 If you don't need to use a tool or have a response ready, use this format:
-Thought: [Your thought process]
+```
+Thought: I now know the final answer
 Action: Provide Final Answer
-Final Answer: [your response in the specified language]
+Final Answer: the final answer
 End of response.
+```
+
 Here is the user's current query:
 <input>
 {input}
@@ -113,7 +118,7 @@ from core.src.models.llm_bedrock import Chat_Bedrock
 llm = Chat_Bedrock()
 
 memory = ConversationBufferWindowMemory(
-    k=10,
+    k=5,
     ai_prefix="Assistant",
     human_prefix="Hu",
     chat_memory=StreamlitChatMessageHistory(),
@@ -199,7 +204,7 @@ chain = agent_chain | get_output
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
-        AIMessage(content="我是您專屬的Gogoro Smart Scooter萬事通助手，很高興為您解答任何關於Gogoro的問題。"),
+        AIMessage(content="Hello, I am your assistant. How can I help you?"),
     ]
 
 if __name__ == "__main__":
