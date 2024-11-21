@@ -38,7 +38,7 @@ def render_chat_interface():
         "車型(Vehicle)", 
         ["CrossOver", "Delight", "JEGO", "SuperSport", "VIVA MIX", "VIVA XL", "VIVA", "S1", "S2", "S3"],
     )
-    car_model = car_model.upper()
+    # car_model = car_model.upper()
     st.session_state["car_model"] = car_model
 
     chat_lang = st.sidebar.selectbox("語言(Language)", ["繁體中文", "English"])
