@@ -2,12 +2,13 @@ from pprint import pprint
 import os
 import streamlit as st
 from langchain.memory import ConversationBufferWindowMemory
-from langchain.callbacks.streaming_stdout_final_only import FinalStreamingStdOutCallbackHandler
+from langchain.callbacks.streaming_stdout_final_only import FinalStreamingStdOutCallbackHandler, StreamingStdOutCallbackHandler
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.callbacks.manager import CallbackManager
+from langchain.agents import initialize_agent
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,7 +22,7 @@ from src.ui import StreamHandler, display_chat_messages, langchain_messages_form
 # llm = Chat_OpenAI()
 
 # from src.agent_prompt import CLAUDE_AGENT_PROMPT
-CLAUDE_AGENT_PROMPT_TEMPLATE = """
+SYSTEM_PROMPT = """
 You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
 
 First, let's review the context and available resources:
@@ -83,41 +84,12 @@ Before providing your final answer, show your reasoning. Include the following s
 5. Summarize the key points to be included in the final response.
 
 It's OK for this section to be quite long.
-
-Output Format:
-If you need to use a tool, use this format:
-```
-Thought: you should always think about what to do
-Action: the action to take, should be one of [{tool_names}]
-Action Input: [input for the tool, including Gogoro {scooter_name} if relevant]
-End of response.
-```
-
-If you don't need to use a tool or have a response ready, use this format:
-```
-Thought: I now know the final answer
-Action: Provide Final Answer
-Final Answer: [your response]
-End of response.
-```
-
-Here is the user's current query:
-<input>
-{input}
-</input>
-
-Please process the query and provide your response.
-Thought: {agent_scratchpad}
 """
-
-CLAUDE_AGENT_PROMPT = PromptTemplate.from_template(
-    template=CLAUDE_AGENT_PROMPT_TEMPLATE
-)
-
 
 from src.agent_tools import LLM_AGENT_TOOLS
 from core.src.models.llm_bedrock import Chat_Bedrock
-llm = Chat_Bedrock(callback_manager=CallbackManager([FinalStreamingStdOutCallbackHandler()]))
+llm = Chat_Bedrock(
+    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
 
 memory = ConversationBufferWindowMemory(
     k=5,
@@ -129,49 +101,17 @@ memory = ConversationBufferWindowMemory(
     input_key="input"
 )
 
-# GENERIC_PROMPT = """
-# You are a highly intelligent and helpful assistant. Your purpose is to assist users by answering their questions, providing insightful responses, and offering support across various topics. Respond concisely, clearly, and politely. 
-# Ensure that your responses are both informative, accessible, and always using {language}.
-# If a question is outside your scope, kindly inform the user and provide guidance on where they might find more information.
-
-# Available tools: {tool_names}
-# {tools}
-# Scratchpad: {agent_scratchpad}
-
-# chat_history: {chat_history}
-# input: {input}
-
-# Instructions:
-# 1. Only use tools if absolutely necessary to answer the question.
-# 2. If the input question can be answered with the information you already know, directly respond with the answer and end the conversation.
-# 3. If you cannot answer with current information and need more data, then and only then use the available tools to gather that information.
-# 4. Avoid repeating tool use if the previous output is already sufficient to answer.
-
-# Answer with "Final Answer:" before your response when you are ready to provide a direct answer without tool usage.
-# """
-# 
-# GENERIC_PROMPT_TEMPLATE = PromptTemplate(
-#     input_variables=["chat_history", "input", "language"],
-#     template=GENERIC_PROMPT
-# )
-
-agent = create_react_agent(
-    llm=llm, 
-    tools=LLM_AGENT_TOOLS,  # 移除GogoroSearch工具
-    # prompt=GENERIC_PROMPT_TEMPLATE
-    prompt=CLAUDE_AGENT_PROMPT,
-    stop_sequence=["End of response."],
-)
-
-agent_chain = AgentExecutor.from_agent_and_tools(
-    agent=agent,
+agent_chain = initialize_agent(
+    llm=llm,
     tools=LLM_AGENT_TOOLS,
+    agent = "zero-shot-react-description",
     verbose=True,
-    return_intermediate_steps=False,
-    memory=memory,
+    handle_parsing_errors = True,
+    return_intermediate_steps=True,
     max_iterations=3,
-    handle_parsing_errors=True
-    # handle_parsing_errors="Check your output and make sure it conforms, use the Action/Action Input syntax"
+    memory = memory,
+    agent_kwargs={"system_message": SYSTEM_PROMPT},
+    streaming=True
 )
 
 # GENERIC_PROMPT = """
@@ -207,7 +147,7 @@ chain = agent_chain | get_output
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
-        AIMessage(content="我是您專屬的Gogoro Smart Scooter萬事通助手，很高興為您解答任何關於Gogoro的問題。"),
+        AIMessage(content="Hello, I am your assistant. How can I help you?"),
     ]
 
 if __name__ == "__main__":

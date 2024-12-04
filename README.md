@@ -8,11 +8,9 @@ python -m venv .venv
 
 - Windows
     ```bash
-    cd .venv/Scripts
-    activate.bat
-
-    cd ../../
+    ".venv/Scripts/activate.bat"
     ```
+
 
 - MacOS
     ```bash
