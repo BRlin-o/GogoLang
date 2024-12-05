@@ -4,6 +4,8 @@ from langchain.callbacks.base import BaseCallbackHandler
 from typing import List, Tuple, Union, Dict
 import sass
 
+from src.constants import SCOOTER_NAMES, LANGUAGES
+
 class StreamHandler(BaseCallbackHandler):
     """
     Callback handler to stream the generated text to Streamlit.
@@ -36,12 +38,12 @@ def render_chat_interface():
     
     car_model = st.sidebar.selectbox(
         "車型(Vehicle)", 
-        ["CrossOver", "Delight", "JEGO", "SuperSport", "VIVA MIX", "VIVA XL", "VIVA", "S1", "S2", "S3"],
+        SCOOTER_NAMES,
     )
     # car_model = car_model.upper()
     st.session_state["car_model"] = car_model
 
-    chat_lang = st.sidebar.selectbox("語言(Language)", ["繁體中文", "English"])
+    chat_lang = st.sidebar.selectbox("語言(Language)", LANGUAGES)
     st.session_state["chat_lang"] = chat_lang
     return car_model, chat_lang
 

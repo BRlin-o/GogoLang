@@ -25,6 +25,7 @@ def call_search(query):
     global CAR_MODEL
     CAR_MODEL = st.session_state["car_model"]
     super_query = f"{query}？"
+    print(f"[DEBUG] kb_id={kb_id}, CAR_MODEL={CAR_MODEL}, query={super_query}")
     return get_rag_chain(kb_id, claude_llm, CAR_MODEL)(super_query)
 
 LLM_AGENT_TOOLS = [

@@ -22,9 +22,31 @@ from src.ui import StreamHandler, display_chat_messages, langchain_messages_form
 # llm = Chat_OpenAI()
 
 # from src.agent_prompt import CLAUDE_AGENT_PROMPT
+# PREFIX = '''
+# You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
+# '''
 PREFIX = '''
 You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
+
+When responding to queries:
+- Always begin with "Thought:" followed by your internal reasoning.
+- If you need to perform an action, explicitly write "Action:" followed by the action type (e.g., "GogoroSearch") and the corresponding input under "Action Input:".
+- If no further action is needed, directly proceed to "Final Answer:".
+
+Markdown Rendering Instructions:
+- If the retrieved data or output contains Markdown syntax such as `![image](url)`, you must retain the original Markdown syntax exactly as provided. Do not modify or convert Markdown image syntax into plain text descriptions.
+
+The required output format is:
+
+1. Thought: (Your reasoning)
+2. Action: (The action type, if any, such as "GogoroSearch")
+3. Action Input: (The input for the action, if required)
+4. Observation: (The result of the action, if applicable)
+5. Final Answer: (The final response to the user's query)
+
+Strictly follow this sequence. Each "Thought:" must be followed by an "Action:" or a "Final Answer:". Failure to follow this format will result in errors.
 '''
+
 
 FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
 '''
@@ -44,8 +66,21 @@ End of response.
 '''
 """
 
-SUFFIX = '''
+# SUFFIX = '''
 
+# Begin!
+
+# Previous conversation history:
+# {chat_history}
+
+# Instructions:
+# - The user's Gogoro scooter model: {scooter_name}
+# - Language for the response: {language}
+# - Query: {input}
+
+# {agent_scratchpad}
+# '''
+SUFFIX = '''
 Begin!
 
 Previous conversation history:
@@ -55,6 +90,15 @@ Instructions:
 - The user's Gogoro scooter model: {scooter_name}
 - Language for the response: {language}
 - Query: {input}
+
+Guidelines:
+- **Answer only Gogoro-related questions.** For unrelated questions, politely decline and do not provide an answer.
+- Retain Markdown syntax as is for all outputs.
+- Always prioritize the `input` question over `chat_history` to avoid context contamination.
+
+Markdown Rendering Reminder:
+- Retain all Markdown syntax exactly as provided, especially for image syntax (e.g., `![image](url)`).
+- Do not alter or convert Markdown syntax to plain text descriptions.
 
 {agent_scratchpad}
 '''
@@ -73,49 +117,30 @@ memory = ConversationBufferWindowMemory(
     memory_key="chat_history",
     input_key="input"
 )
+# from langchain.memory import ConversationSummaryBufferMemory
+
+# memory = ConversationSummaryBufferMemory(
+#     llm=llm,
+#     max_token_limit=5000
+# )
 
 agent_chain = initialize_agent(
     llm=llm,
     tools=LLM_AGENT_TOOLS,
     agent = "zero-shot-react-description",
     verbose=True,
-    # output_key = "result",
     handle_parsing_errors = True,
     return_intermediate_steps=True,
     max_iterations=3,
-    early_stopping_method="generate",
     memory = memory,
     agent_kwargs={
         'prefix': PREFIX, 
         # 'format_instructions': FORMAT_INSTRUCTIONS,
         'suffix': SUFFIX
     },
-    streaming=True
+    streaming=True,
+    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()])
 )
-
-# GENERIC_PROMPT = """
-# You are a highly intelligent and helpful assistant. Your purpose is to assist users by answering their questions, providing insightful responses, and offering support across various topics. Respond concisely, clearly, and politely. 
-# Ensure that your responses are both informative, accessible, and always using {language}.
-# If a question is outside your scope, kindly inform the user and provide guidance on where they might find more information.
-
-# chat_history: {chat_history}
-# user_input: {input}
-# """
-
-# GENERIC_PROMPT_TEMPLATE = PromptTemplate(
-#     input_variables=["chat_history", "input", "language"],
-#     template=GENERIC_PROMPT
-# )
-
-# from langchain.chains import LLMChain
-
-# # 使用LLMChain，傳遞自訂的變數
-# agent_chain = LLMChain(
-#     llm=llm,
-#     prompt=GENERIC_PROMPT_TEMPLATE,
-#     memory=memory,
-#     verbose=True
-# )
 
 from langchain_core.runnables import RunnableLambda
 
