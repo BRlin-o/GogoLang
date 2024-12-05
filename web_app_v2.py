@@ -52,8 +52,8 @@ FORMAT_INSTRUCTIONS = """To use a tool, please use the following format:
 '''
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
-Action Input: [input for the tool, including Gogoro {scooter_name} if relevant]
-End of response.
+Action Input: the input to the action
+Observation: the result of the action
 '''
 
 When you have gathered all the necessary information about Gogoro Smart Scooters, formulate a comprehensive response for the user. Tailor the response based on the specific scooter model and the language specified.
@@ -62,7 +62,6 @@ When you have gathered all the necessary information about Gogoro Smart Scooters
 Thought: I now know the final answer
 Action: Provide Final Answer
 Final Answer: [your response]
-End of response.
 '''
 """
 
@@ -135,7 +134,7 @@ agent_chain = initialize_agent(
     memory = memory,
     agent_kwargs={
         'prefix': PREFIX, 
-        # 'format_instructions': FORMAT_INSTRUCTIONS,
+        'format_instructions': FORMAT_INSTRUCTIONS,
         'suffix': SUFFIX
     },
     streaming=True,

@@ -1,3 +1,5 @@
+## 2.2的架構 2.1.2的prompt
+
 from pprint import pprint
 import os
 import streamlit as st
@@ -20,56 +22,36 @@ from src.ui import StreamHandler, display_chat_messages, langchain_messages_form
 
 PREFIX = '''
 You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
-
-Here is the user's question:
-<input>
-{{input}}
-</input>
-
-For context, here is the previous conversation history:
-<chat_history>
-{{chat_history}}
-</chat_history>
-
-Additional information:
-- The user's Gogoro scooter model: 
-<scooter_model>
-{{scooter_name}}
-</scooter_model>
-
-- Language for the response: 
-<language>
-{{language}}
-</language>
-
-Here are the tools available to you:
-<tool_descriptions>
-{{tool_descs}}
-</tool_descriptions>
-
-The names of these tools are:
-<tool_names>
-{{tool_names}}
-</tool_names>
 '''
 
 SUFFIX = '''
-Ensure your response is in the specified language and tailored to the user's specific scooter model.
+Begin!
+Question: {input}
 
-Here's any additional information or notes:
-<agent_scratchpad>
-{{agent_scratchpad}}
-</agent_scratchpad>
+Previous conversation history:
+{chat_history}
 
-Now, please proceed with answering the user's question using the format provided above.
+Additional instructions:
+- The user's Gogoro scooter model: {scooter_name}
+- Language for the response: {language}
+
+Guidelines:
+- **Only answer Gogoro-related questions.** For unrelated questions, politely decline with: "我只專注於提供 Gogoro 或智慧機車相關的技術資訊。"
+- **Prioritize the `input` field over `chat_history`** to avoid context contamination.
+- **Retain Markdown syntax** in all outputs, especially for structured data like tables or images (e.g., `![image](url)`).
+
+{agent_scratchpad}
 '''
 
 FORMAT_INSTRUCTIONS = '''
+You have access to the following tools:
+{tool_descs}
+
 When answering questions, use the following format:
 
 Question: [the input question you must answer]
 Thought: [your reasoning about what to do next]
-Action: [the action to take, should be one of the tool names listed above]
+Action: [the action to take, should be one of {tool_names}]
 Action Input: [the input to the action]
 Observation: [the result of the action]
 ... (this Thought/Action/Action Input/Observation can be repeated as needed)

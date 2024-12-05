@@ -29,7 +29,8 @@ def get_rag_chain(kb_id, llm, car_model=None):
             "vectorSearchConfiguration": {
                 "numberOfResults": 5,
                 "filter": {
-                    "equals": { "key": "scooter_name", "value": car_model }
+                    "equals": { "key": "car_model", "value": car_model.upper() }
+                    # "equals": { "key": "scooter_name", "value": car_model }
                 }
             }
         },

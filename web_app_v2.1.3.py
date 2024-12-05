@@ -1,3 +1,6 @@
+## 2.1 new version for agent tools trying
+
+
 from pprint import pprint
 import os
 import streamlit as st
@@ -18,6 +21,13 @@ set_debug(True)
 
 from src.ui import StreamHandler, display_chat_messages, langchain_messages_format, render_chat_interface, get_user_md, get_assistant_md
 
+# from core.src.models.llm_openai import Chat_OpenAI
+# llm = Chat_OpenAI()
+
+# from src.agent_prompt import CLAUDE_AGENT_PROMPT
+# PREFIX = '''
+# You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
+# '''
 PREFIX = '''
 You are an AI assistant specializing in Gogoro Smart Scooters. Your primary role is to provide accurate and helpful information to Gogoro scooter owners based on the knowledge base provided to you.
 
@@ -89,9 +99,12 @@ d) Consider any potential limitations or caveats in answering the question
 '''
 
 from src.agent_tools import LLM_AGENT_TOOLS
+# from src.tools import create_gogoro_tool
 from core.src.models.llm_bedrock import Chat_Bedrock
+aws_knowledge_base_id = os.getenv("KB_ID")
 llm = Chat_Bedrock(
-    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
+    # callback_manager=CallbackManager([StreamingStdOutCallbackHandler(st.container())])
+)
 
 memory = ConversationBufferWindowMemory(
     k=5,
@@ -102,29 +115,25 @@ memory = ConversationBufferWindowMemory(
     memory_key="chat_history",
     input_key="input"
 )
-# from langchain.memory import ConversationSummaryBufferMemory
-
-# memory = ConversationSummaryBufferMemory(
-#     llm=llm,
-#     max_token_limit=5000
-# )
 
 agent_chain = initialize_agent(
     llm=llm,
     tools=LLM_AGENT_TOOLS,
-    agent = "zero-shot-react-description",
+    # tools=[create_gogoro_tool(aws_knowledge_base_id, llm)],
+    agent = "chat-zero-shot-react-description",
     verbose=True,
     handle_parsing_errors = True,
     return_intermediate_steps=True,
-    max_iterations=3,
+    max_iterations=4,
     memory = memory,
     agent_kwargs={
         'prefix': PREFIX, 
         'format_instructions': FORMAT_INSTRUCTIONS,
         'suffix': SUFFIX
     },
+    stop=["Observation:"],
     streaming=True,
-    callback_manager=CallbackManager([StreamingStdOutCallbackHandler()])
+    # callback_manager=CallbackManager([StreamingStdOutCallbackHandler(st.container())])
 )
 
 from langchain_core.runnables import RunnableLambda
